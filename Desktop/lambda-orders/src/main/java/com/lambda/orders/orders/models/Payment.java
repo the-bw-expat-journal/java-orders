@@ -1,5 +1,8 @@
 package com.lambda.orders.orders.models;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,18 +15,29 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long paymentid;
 
-    @Column(unique = true, nullable = false)
     private String type;
 
+    // Connect to orders here
     @ManyToMany(mappedBy = "payments")
-    private Set<Order> orders= new HashSet<>();
+    @JsonIgnoreProperties("payments")
+    private Set<Order> orders = new HashSet<>();
 
-    public Payment(){
-
-    }
-
+    // CONSTRUCTORS
     public Payment(String type) {
         this.type = type;
+    }
+
+    public Payment() {
+    }
+
+    // GETTERS AND SETTERS
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 
     public long getPaymentid() {
@@ -40,13 +54,5 @@ public class Payment {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
     }
 }

@@ -1,5 +1,8 @@
 package com.lambda.orders.orders.models;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,26 +16,52 @@ public class Order {
     private long ordnum;
 
     private double ordamount;
+
     private double advanceamount;
+
     private String orderdescription;
 
-    @ManyToOne
-    @JoinColumn(name = "custcode", nullable = false)
+    // Connect to customer here
+    @ManyToOne()
+    @JoinColumn(name = "custcode")
+    @JsonIgnoreProperties("orders")
     private Customer customer;
 
-    @ManyToMany
-    @JoinTable(name = "orderspayments",joinColumns = @JoinColumn(name =
-            "ordnum"), inverseJoinColumns = @JoinColumn(name = "paymentid"))
+    // Connect to payments here
+    @ManyToMany()
+    @JoinTable(name = "orderspayments",
+            joinColumns = @JoinColumn(name = "ordnum"),
+            inverseJoinColumns = @JoinColumn(name = "paymentid"))
+    @JsonIgnoreProperties("orders")
     private Set<Payment> payments = new HashSet<>();
 
-    public Order(){
+    // CONSTRUCTORS
 
+    public Order(double ordamount, double advanceamount, Customer customer, String orderdescription) {
+        this.advanceamount = advanceamount;
+        this.ordamount = ordamount;
+        this.orderdescription = orderdescription;
+        this.customer = customer;
     }
 
-    public Order(double ordamount, double advanceamount, String orderdescription) {
-        this.ordamount = ordamount;
-        this.advanceamount = advanceamount;
-        this.orderdescription = orderdescription;
+    public Order() {
+    }
+
+    // GETTERS AND SETTERS
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Set<Payment> getPayments() {
+        return payments;
+    }
+
+    public void addPayments(Payment payment) {
+        this.payments.add(payment);
     }
 
     public long getOrdnum() {
@@ -67,19 +96,4 @@ public class Order {
         this.orderdescription = orderdescription;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Set<Payment> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(Set<Payment> payments) {
-        this.payments = payments;
-    }
 }

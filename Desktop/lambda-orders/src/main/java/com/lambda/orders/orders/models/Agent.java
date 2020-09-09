@@ -1,4 +1,5 @@
 package com.lambda.orders.orders.models;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,33 +12,51 @@ public class Agent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long agentcode;
+
     private String agentname;
-    private String workingarea;
+
     private double commission;
-    private String phone;
+
     private String country;
 
-    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private String phone;
+
+    private String workingarea;
+
+    @OneToMany(mappedBy = "agent",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @JsonIgnoreProperties("agent")
     private List<Customer> customers = new ArrayList<>();
 
-    public Agent(){
-
+    //CONSTRUCTORS
+    public Agent(String agentname, String country, double commission, String phone, String workingarea) {
+        this.agentname = agentname;
+        this.commission = commission;
+        this.country = country;
+        this.phone = phone;
+        this.workingarea = workingarea;
+        this.customers = customers;
     }
 
-    public Agent(String agentname, String workingarea, double commission, String phone, String country) {
-        this.agentname = agentname;
-        this.workingarea = workingarea;
-        this.commission = commission;
-        this.phone = phone;
-        this.country = country;
+    public Agent() {
+    }
+
+    //GETTERS AND SETTERS
+    public void setAgentcode(long agentcode) {
+        this.agentcode = agentcode;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     public long getAgentcode() {
         return agentcode;
-    }
-
-    public void setAgentcode(long agentcode) {
-        this.agentcode = agentcode;
     }
 
     public String getAgentname() {
@@ -48,20 +67,20 @@ public class Agent {
         this.agentname = agentname;
     }
 
-    public String getWorkingarea() {
-        return workingarea;
-    }
-
-    public void setWorkingarea(String workingarea) {
-        this.workingarea = workingarea;
-    }
-
     public double getCommission() {
         return commission;
     }
 
     public void setCommission(double commission) {
         this.commission = commission;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getPhone() {
@@ -72,11 +91,11 @@ public class Agent {
         this.phone = phone;
     }
 
-    public String getCountry() {
-        return country;
+    public String getWorkingarea() {
+        return workingarea;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setWorkingarea(String workingarea) {
+        this.workingarea = workingarea;
     }
 }
